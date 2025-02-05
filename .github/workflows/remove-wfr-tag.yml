@@ -1,0 +1,31 @@
+name: Remove waiting-for-response tag
+
+on:
+    issue_comment:
+        types: [created]
+
+jobs:
+    remove-tag:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Remove waiting-for-response label if present
+                uses: actions/github-script@v6
+                with:
+                    script: |
+                        const issue = context.payload.issue;
+                        if (!issue) {
+                            console.log("No issue or PR found in the payload.");
+                            return;
+                        }
+                        const labels = issue.labels.map(label => label.name);
+                        if (labels.includes("waiting-for-response")) {
+                            console.log(`Removing label 'waiting-for-response' from issue/PR #${issue.number}`);
+                            await github.issues.removeLabel({
+                                owner: context.repo.owner,
+                                repo: context.repo.repo,
+                                issue_number: issue.number,
+                                name: "waiting-for-response"
+                            });
+                        } else {
+                            console.log("Label 'waiting-for-response' not found on this issue/PR.");
+                        }
