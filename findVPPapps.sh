@@ -12,5 +12,4 @@ mdfind -onlyin /Applications/ 'kMDItemAppStoreReceiptIsVPPLicensed == "1"' | whi
   result="$AppName $AppOwner"
 
   echo "<result>$result</result>"
-  echo "Hello."
 done
